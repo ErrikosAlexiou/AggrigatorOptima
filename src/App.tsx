@@ -1,11 +1,18 @@
-
-import { Button } from '@mui/material';
+import { Routes, Route } from 'react-router';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 
 function App() {
   return (
-    <>
-      <Button variant="contained">Hello world</Button>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="*" element={<>H</>} />
+    </Routes>
   );
 }
 

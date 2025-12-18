@@ -1,0 +1,143 @@
+.marketing-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 20% 20%, #e8fff7 0, #f6f9fb 40%, #f9fafb 70%);
+  color: #0b2b3a;
+}
+
+.marketing-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(12, 54, 77, 0.08);
+}
+
+.marketing-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #0b2b3a;
+  text-decoration: none;
+}
+
+.brand img {
+  height: 44px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #0b2b3a;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  background: rgba(0, 135, 108, 0.1);
+  color: #005e4a;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.marketing-footer {
+  margin-top: auto;
+  padding: 40px 0 24px;
+  background: #0b2b3a;
+  color: #e8f5f2;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.footer-heading {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-links a {
+  color: #d0e7e3;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #7ae0c8;
+}
+
+.footer-tagline {
+  color: #d0e7e3;
+  margin-top: 8px;
+  max-width: 260px;
+}
+
+.footer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #c9e0da;
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    height: auto;
+    padding: 12px 0;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+  }
+
+  .nav-actions {
+    justify-content: flex-start;
+  }
+}

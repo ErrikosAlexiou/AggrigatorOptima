@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+## Aggregator Optima Monorepo
+MVP demonstrating CSV ingestion, auth, dashboards, and compliance docs for sustainability data.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Structure
+- `apps/api` – Express + Prisma (SQLite) REST API
+- `apps/web` – React + Vite + Shopify Polaris frontend
+- `packages/shared` – Shared Zod schemas/types
+- `docs` – Compliance and architecture notes
 
-Currently, two official plugins are available:
+### Prerequisites
+- Node 18+ and pnpm (`npm install -g pnpm`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Setup
+1. Copy `.env.example` to `.env` (root or `apps/api/.env`) and set secrets.
+2. Install dependencies: `pnpm install`
+3. Migrate DB: `pnpm --filter api prisma db push`
+4. Seed users/data: `pnpm --filter api db:seed` (creates `admin@example.com` / `AdminPass123!` and `user@example.com` / `UserPass123!`)
+5. Run dev servers: `pnpm dev` (starts API on 4000, web on 5173)
 
-## React Compiler
+### API highlights
+- Auth: `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `POST /api/v1/auth/refresh`, `POST /api/v1/auth/logout`, `GET /api/v1/auth/me`
+- Observations: `GET /api/v1/observations` with filters/pagination
+- Metrics: `GET /api/v1/metrics/summary`
+- Uploads: `POST /api/v1/uploads/csv` (multipart), `GET /api/v1/uploads` (admin)
+- Contact: `POST /api/v1/contact`
+- Admin: `GET/POST /api/v1/admin/users`, `DELETE /api/v1/admin/users/:id`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Example curls
+```bash
+# login
+curl -X POST http://localhost:4000/api/v1/auth/login -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"AdminPass123!"}'
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# list observations (after copying access token)
+curl -H "Authorization: Bearer $TOKEN" "http://localhost:4000/api/v1/observations?page=1&pageSize=5"
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Notes
+- CORS is scoped via `WEB_ORIGIN` (defaults to Vite dev URL).
+- Refresh tokens are HttpOnly cookies; access tokens are returned in JSON for the client to store.
+- CSV uploads expect exact headers and trim whitespace automatically; failures return per-row examples.

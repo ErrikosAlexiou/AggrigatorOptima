@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  passwordHash String
+  role         String         @default("USER")
+  createdAt    DateTime       @default(now())
+  refreshTokens RefreshToken[]
+  uploads      UploadHistory[]
+}
+
+model RefreshToken {
+  id        String   @id
+  token     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revoked   Boolean  @default(false)
+}
+
+model Observation {
+  id                        Int      @id @default(autoincrement())
+  observationId             Int
+  cellId                    String
+  lat                       Float
+  lon                       Float
+  acquisitionDate           DateTime
+  year                      Int
+  month                     Int
+  sensor                    String
+  ndvi                      Float
+  evi                       Float
+  cloudCoverPct             Float
+  landCoverType             String
+  baselineTreeCoverPct      Float
+  treeCoverPct              Float
+  deforestationFlag         Int
+  deforestationAmountPct    Float
+  disturbanceType           String
+  countryPart               String
+  priorityConservationArea  Float
+  createdAt                 DateTime @default(now())
+}
+
+model UploadHistory {
+  id             Int       @id @default(autoincrement())
+  filename       String
+  rowsReceived   Int
+  rowsInserted   Int
+  rowsFailed     Int
+  failureExamples String?
+  createdAt      DateTime  @default(now())
+  uploadedBy     User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById   Int?
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  company   String
+  message   String
+  createdAt DateTime @default(now())
+}
